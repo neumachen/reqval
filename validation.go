@@ -1,6 +1,8 @@
 package reqval
 
-import "net/http"
+import (
+	"net/http"
+)
 
 // RequestValidator ...
 type RequestValidator interface {

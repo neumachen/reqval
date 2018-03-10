@@ -1,6 +1,8 @@
 package reqval
 
-import "net/http"
+import (
+	"net/http"
+)
 
 const requiredMessage = "This is a required parameter"
 
@@ -42,7 +44,8 @@ const requiredFormValueMessage = "No form value set"
 
 // RequiredFormValue ...
 type RequiredFormValue struct {
-	Message string
+	Message   string
+	MaxMemory int64
 }
 
 // Validate ...
@@ -53,24 +56,24 @@ func (r *RequiredFormValue) Validate(req *http.Request, field string) (Validatio
 		r.Message = requiredFormValueMessage
 	}
 
-	req2 := *req
-
-	err := req2.ParseForm()
+	if r.MaxMemory == 0 {
+		r.MaxMemory = (10 * 1024 * 1024)
+	}
+	err := req.ParseMultipartForm(r.MaxMemory)
 	if err != nil {
 		return nil, err
 	}
 
-	formValues := req2.PostForm[field]
-	if formValues == nil || len(formValues) == 0 {
+	formValues := req.PostForm
+	if formValues[field] == nil || len(formValues[field]) == 0 {
 		validationErrors = append(validationErrors, NewValidationError(field, "", r.Message))
 	}
 
-	for _, formValue := range formValues {
+	for _, formValue := range formValues[field] {
 		if len(formValue) > 0 {
 			continue
 		}
 		validationErrors = append(validationErrors, NewValidationError(field, formValue, r.Message))
-
 	}
 
 	if len(validationErrors) == 0 {
