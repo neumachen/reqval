@@ -1,4 +1,4 @@
-package qryval
+package reqval
 
 // ValidationError ...
 type ValidationError interface {
@@ -30,12 +30,12 @@ func (v *validationError) Field() string {
 
 // ValValue ...
 func (v *validationError) Value() string {
-	return v.VErr.Field
+	return v.VErr.Value
 }
 
 // ValidationMessage ...
 func (v *validationError) Message() string {
-	return v.VErr.Field
+	return v.VErr.Message
 }
 
 // NewValidationError ...
@@ -49,8 +49,3 @@ func NewValidationError(field, value, message string) ValidationError {
 
 // ValidationErrors ...
 type ValidationErrors []ValidationError
-
-// Count ...
-func (v ValidationErrors) Count() int {
-	return len(v)
-}
