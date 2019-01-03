@@ -8,15 +8,24 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestIsInt_ValidationSuccess(t *testing.T) {
-	u := url.Values{}
-	u.Add("int", "1")
+func TestIsInt_Validate_Success(t *testing.T) {
+	tests := []string{
+		"01",
+		"1",
+		"99999999",
+		"099999999",
+	}
 
-	req := httptest.NewRequest("POST", "http://www.example.com", nil)
-	req.URL.RawQuery = u.Encode()
-	r := IsInt{}
+	for _, test := range tests {
+		u := url.Values{}
+		u.Add("int", test)
 
-	validationErrors, err := r.Validate(req, "int")
-	assert.NoError(t, err)
-	assert.Empty(t, validationErrors)
+		req := httptest.NewRequest("POST", "http://www.example.com", nil)
+		req.URL.RawQuery = u.Encode()
+		r := IsInt{}
+
+		validationErrors, err := r.Validate(req, "int")
+		assert.NoError(t, err)
+		assert.Empty(t, validationErrors)
+	}
 }

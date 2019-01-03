@@ -12,7 +12,7 @@ type IsInt struct {
 
 const isIntMessage = "Must be int matching regex: ^([0-9]|[1-9][0-9])$"
 
-var isIntRegex = regexp.MustCompile("^([0-9]|[1-9][0-9])$")
+var isIntRegex = regexp.MustCompile("^[0-9]+$")
 
 // Validate checks whether a value is empty or not by determining it's length
 func (i *IsInt) Validate(req *http.Request, field string) (ValidationErrors, error) {
