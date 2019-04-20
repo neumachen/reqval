@@ -11,7 +11,7 @@ type MatchRegexPattern struct {
 	Message      string
 }
 
-const matchRegexPatternMessage = "Must be int matching regex: ^([0-9]|[1-9][0-9])$"
+const matchRegexPatternMessage = "Must regex pattern"
 
 // Validate checks whether a value is empty or not by determining it's length
 func (m *MatchRegexPattern) Validate(req *http.Request, field string) (ValidationErrors, error) {
@@ -24,9 +24,9 @@ func (m *MatchRegexPattern) Validate(req *http.Request, field string) (Validatio
 	}
 
 	// we do not check for presence of the fields since this validator is
-	// meant for validating that a value is an int. If presence is
-	// required, the required validator should be used in conjuction with
-	// this one.
+	// meant for validating that a value matches a regex pattern. If
+	// presence is required, the required validator should be used in
+	// conjuction with this one.
 	if fieldValues == nil || len(fieldValues) == 0 {
 		return nil, nil
 	}
