@@ -19,7 +19,7 @@ func (r *RequiredQueryValue) Validate(req *http.Request, field string) (Validati
 		r.Message = requiredMessage
 	}
 
-	if fieldValues == nil || len(fieldValues) == 0 {
+	if len(fieldValues) == 0 {
 		validationErrors = append(validationErrors, NewValidationError(field, "", r.Message))
 	}
 

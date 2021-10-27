@@ -16,9 +16,10 @@ func TestValidate(t *testing.T) {
 		"test_file_2": RequestValidators{&RequiredFormFile{}},
 	}
 	tmpDir1, tmpFile1 := createTempFile(t, []byte(`test`), "", "", "test.txt")
-	tmpDir1, tmpFile2 := createTempFile(t, []byte(`test`), "", "", "test.txt")
+	tmpDir2, tmpFile2 := createTempFile(t, []byte(`test`), "", "", "test.txt")
 
 	defer os.RemoveAll(tmpDir1)
+	defer os.RemoveAll(tmpDir2)
 
 	files := make(map[string]string)
 	files["test_file_1"] = tmpFile1

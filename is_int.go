@@ -28,7 +28,7 @@ func (i *IsInt) Validate(req *http.Request, field string) (ValidationErrors, err
 	// meant for validating that a value is an int. If presence is
 	// required, the required validator should be used in conjuction with
 	// this one.
-	if fieldValues == nil || len(fieldValues) == 0 {
+	if len(fieldValues) == 0 {
 		return nil, nil
 	}
 

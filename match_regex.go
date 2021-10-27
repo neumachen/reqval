@@ -27,7 +27,7 @@ func (m *MatchRegexPattern) Validate(req *http.Request, field string) (Validatio
 	// meant for validating that a value matches a regex pattern. If
 	// presence is required, the required validator should be used in
 	// conjuction with this one.
-	if fieldValues == nil || len(fieldValues) == 0 {
+	if len(fieldValues) == 0 {
 		return nil, nil
 	}
 
