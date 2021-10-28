@@ -13,6 +13,10 @@ type RequestValidators []RequestValidator
 // RequestValidations ...
 type RequestValidations map[string]RequestValidators
 
+func (r RequestValidations) GetLength() int {
+	return len(r)
+}
+
 // Validate ...
 func Validate(req *http.Request, validations RequestValidations) (ValidationErrors, error) {
 	validationErrors := NewValidationErrors()
