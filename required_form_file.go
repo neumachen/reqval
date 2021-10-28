@@ -23,7 +23,7 @@ func (r *RequiredFormFile) Validate(req *http.Request, field string) (Validation
 		// do nothing
 	case http.ErrMissingFile:
 		validationErrors.Append(NewValidationError(
-			SetParam(field),
+			SetField(field),
 			SetValue(""),
 			SetMessage(r.Message),
 		))

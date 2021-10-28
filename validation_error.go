@@ -1,7 +1,7 @@
 package reqval
 
 type errorType struct {
-	Param   string `json:"param,omitempty"`
+	Field   string `json:"field,omitempty"`
 	Value   string `json:"value,omitempty"`
 	Message string `json:"message,omitempty"`
 }
@@ -10,9 +10,9 @@ type validationError struct {
 	errorType
 }
 
-// SetParam ...
-func (v *validationError) SetParam(value string) {
-	v.errorType.Param = value
+// SetField ...
+func (v *validationError) SetField(field string) {
+	v.errorType.Field = field
 }
 
 // SetValue ...
@@ -25,9 +25,9 @@ func (v *validationError) SetMessage(message string) {
 	v.errorType.Message = message
 }
 
-// Param ...
-func (v *validationError) Param() string {
-	return v.errorType.Param
+// Field ...
+func (v *validationError) Field() string {
+	return v.errorType.Field
 }
 
 // Value ...
@@ -44,17 +44,17 @@ var _ ValidationError = (*validationError)(nil)
 
 // ValidationError ...
 type ValidationError interface {
-	SetParam(param string)
+	SetField(field string)
 	SetValue(value string)
-	SetMessage(messag string)
-	Param() string
+	SetMessage(message string)
+	Field() string
 	Value() string
 	Message() string
 }
 
-func SetParam(param string) ValidationErrorSetterFunc {
+func SetField(field string) ValidationErrorSetterFunc {
 	return func(valError ValidationError) {
-		valError.SetParam(param)
+		valError.SetField(field)
 	}
 }
 

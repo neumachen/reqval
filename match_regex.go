@@ -35,7 +35,7 @@ func (m *MatchRegexPattern) Validate(req *http.Request, field string) (Validatio
 			continue
 		}
 		validationErrors.Append(NewValidationError(
-			SetParam(field),
+			SetField(field),
 			SetValue(fieldValue),
 			SetMessage(m.Message),
 		))

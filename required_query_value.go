@@ -21,7 +21,7 @@ func (r *RequiredQueryValue) Validate(req *http.Request, field string) (Validati
 
 	if len(fieldValues) == 0 {
 		validationErrors.Append(NewValidationError(
-			SetParam(field),
+			SetField(field),
 			SetValue(""),
 			SetMessage(r.Message),
 		))
@@ -32,7 +32,7 @@ func (r *RequiredQueryValue) Validate(req *http.Request, field string) (Validati
 			continue
 		}
 		validationErrors.Append(NewValidationError(
-			SetParam(field),
+			SetField(field),
 			SetValue(fieldValue),
 			SetMessage(r.Message),
 		))

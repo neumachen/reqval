@@ -43,7 +43,7 @@ func (r *RequiredFormValue) Validate(req *http.Request, field string) (Validatio
 	formValues := req.PostForm
 	if formValues[field] == nil || len(formValues[field]) == 0 {
 		validationErrors.Append(NewValidationError(
-			SetParam(field),
+			SetField(field),
 			SetValue(""),
 			SetMessage(r.Message),
 		))
@@ -54,7 +54,7 @@ func (r *RequiredFormValue) Validate(req *http.Request, field string) (Validatio
 			continue
 		}
 		validationErrors.Append(NewValidationError(
-			SetParam(field),
+			SetField(field),
 			SetValue(formValue),
 			SetMessage(r.Message),
 		))

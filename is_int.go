@@ -37,7 +37,7 @@ func (i *IsInt) Validate(req *http.Request, field string) (ValidationErrors, err
 			continue
 		}
 		validationErrors.Append(NewValidationError(
-			SetParam(field),
+			SetField(field),
 			SetValue(fieldValue),
 			SetMessage(i.Message),
 		))
