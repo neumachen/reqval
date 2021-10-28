@@ -1,66 +1,71 @@
 package reqval
 
 import (
+	"net/http"
 	"net/http/httptest"
 	"net/url"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
-func TestRequiredQueryValueValidate_ValidationSuccess(t *testing.T) {
-	u := url.Values{}
-	u.Add("foo", "moo")
+func TestRequiredQueryValue_Validate(t *testing.T) {
+	t.Run("validation success", func(t *testing.T) {
+		u := url.Values{}
+		u.Add("foo", "moo")
 
-	req := httptest.NewRequest("POST", "http://www.example.com", nil)
-	req.URL.RawQuery = u.Encode()
-	r := RequiredQueryValue{}
+		req := httptest.NewRequest(http.MethodGet, "http://www.example.com", nil)
+		req.URL.RawQuery = u.Encode()
+		r := RequiredQueryValue{}
 
-	validationErrors, err := r.Validate(req, "foo")
-	assert.NoError(t, err)
-	assert.Empty(t, validationErrors)
-}
+		validationErrors, err := r.Validate(req, "foo")
+		require.NoError(t, err)
+		require.Empty(t, validationErrors)
+	})
 
-func TestRequiredQueryValueValidate_ValidationFail(t *testing.T) {
-	u := url.Values{}
-	u.Add("boo", "moo")
+	t.Run("validation failed", func(t *testing.T) {
+		u := url.Values{}
+		u.Add("boo", "moo")
 
-	req := httptest.NewRequest("POST", "http://www.example.com", nil)
-	req.URL.RawQuery = u.Encode()
-	r := RequiredQueryValue{}
+		req := httptest.NewRequest(http.MethodGet, "http://www.example.com", nil)
+		req.URL.RawQuery = u.Encode()
+		r := RequiredQueryValue{}
 
-	validationErrors, err := r.Validate(req, "foo")
-	assert.NoError(t, err)
-	assert.NotEmpty(t, validationErrors)
-}
+		validationErrors, err := r.Validate(req, "foo")
+		require.NoError(t, err)
+		require.NotEmpty(t, validationErrors)
+	})
 
-func TestRequiredQueryValueValidate_ValidationFail_Multiple(t *testing.T) {
-	u := url.Values{}
-	u.Add("boo", "moo")
-	u.Add("boo", "moo")
-	u.Add("boo", "")
-	u.Add("boo", "moo")
-	u.Add("boo", "")
+	t.Run("validation failed - multiple", func(t *testing.T) {
+		u := url.Values{}
+		u.Add("boo", "moo")
+		u.Add("boo", "moo")
+		u.Add("boo", "")
+		u.Add("boo", "moo")
+		u.Add("boo", "")
 
-	req := httptest.NewRequest("POST", "http://www.example.com", nil)
-	req.URL.RawQuery = u.Encode()
-	r := RequiredQueryValue{}
+		req := httptest.NewRequest(http.MethodGet, "http://www.example.com", nil)
+		req.URL.RawQuery = u.Encode()
+		r := RequiredQueryValue{}
 
-	validationErrors, err := r.Validate(req, "boo")
-	assert.NoError(t, err)
-	assert.NotEmpty(t, validationErrors)
-}
+		validationErrors, err := r.Validate(req, "boo")
+		require.NoError(t, err)
+		require.NotEmpty(t, validationErrors)
+	})
 
-func TestRequiredQueryValueValidate_ValidationFail_CustomMessage(t *testing.T) {
-	u := url.Values{}
-	u.Add("boo", "moo")
+	t.Run("validation failed - custom message", func(t *testing.T) {
+		u := url.Values{}
+		u.Add("boo", "moo")
 
-	req := httptest.NewRequest("POST", "http://www.example.com", nil)
-	req.URL.RawQuery = u.Encode()
-	r := RequiredQueryValue{Message: "boo"}
+		req := httptest.NewRequest(http.MethodGet, "http://www.example.com", nil)
+		req.URL.RawQuery = u.Encode()
+		r := RequiredQueryValue{MessageFunc: func(field string) string {
+			return "boo"
+		}}
 
-	validationErrors, err := r.Validate(req, "foo")
-	assert.NoError(t, err)
-	assert.NotEmpty(t, validationErrors)
-	assert.Equal(t, validationErrors[0].Message(), "boo")
+		validationErrors, err := r.Validate(req, "foo")
+		require.NoError(t, err)
+		require.NotEmpty(t, validationErrors)
+		require.Equal(t, validationErrors[0].Message(), "boo")
+	})
 }

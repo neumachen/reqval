@@ -1,41 +1,44 @@
 package reqval
 
-import "net/http"
+import (
+	"fmt"
+	"net/http"
+)
 
-const requiredMessage = "This is a required parameter"
+var requiredQueryParamMessageFunc = func(field string) string {
+	return fmt.Sprintf("query param: %s is required but was not provided", field)
+}
 
 // RequiredQueryValue ...
 type RequiredQueryValue struct {
-	Message string
+	MessageFunc func(field string) string
 }
 
 // Validate checks whether a value is empty or not by determining it's length
 func (r *RequiredQueryValue) Validate(req *http.Request, field string) (ValidationErrors, error) {
 	fieldValues := req.URL.Query()[field]
 
-	validationErrors := make(ValidationErrors, 0)
-
-	if r.Message == "" {
-		r.Message = requiredMessage
+	if IsNil(r.MessageFunc) {
+		r.MessageFunc = requiredQueryParamMessageFunc
 	}
 
+	validationErrors := make(ValidationErrors, 0)
 	if len(fieldValues) == 0 {
 		validationErrors.Append(NewValidationError(
 			SetField(field),
-			SetValue(""),
-			SetMessage(r.Message),
+			SetMessage(r.MessageFunc(field)),
 		))
-	}
-
-	for _, fieldValue := range fieldValues {
-		if len(fieldValue) > 0 {
-			continue
+	} else {
+		for _, fieldValue := range fieldValues {
+			if len(fieldValue) > 0 {
+				continue
+			}
+			validationErrors.Append(NewValidationError(
+				SetField(field),
+				SetValue(fieldValue),
+				SetMessage(r.MessageFunc(field)),
+			))
 		}
-		validationErrors.Append(NewValidationError(
-			SetField(field),
-			SetValue(fieldValue),
-			SetMessage(r.Message),
-		))
 	}
 
 	if validationErrors.GetLength() == 0 {
