@@ -1,8 +1,6 @@
 package reqval
 
-import (
-	"net/http"
-)
+import "net/http"
 
 // RequestValidator ...
 type RequestValidator interface {
@@ -17,19 +15,22 @@ type RequestValidations map[string]RequestValidators
 
 // Validate ...
 func Validate(req *http.Request, validations RequestValidations) (ValidationErrors, error) {
-	validationErrors := make(ValidationErrors, 0)
-	for field, validators := range validations {
+	validationErrors := NewValidationErrors()
+	for param, validators := range validations {
 		for _, validator := range validators {
-			valErrs, err := validator.Validate(req, field)
+			valErrs, err := validator.Validate(req, param)
 			if err != nil {
 				return nil, err
 			}
-			if len(valErrs) > 0 {
-				validationErrors = append(validationErrors, valErrs...)
+			if valErrs.GetLength() > 0 {
+				validationErrors.Append(
+					valErrs...,
+				)
 			}
 		}
 	}
-	if len(validationErrors) == 0 {
+
+	if validationErrors.GetLength() == 0 {
 		return nil, nil
 	}
 	return validationErrors, nil

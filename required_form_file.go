@@ -22,11 +22,15 @@ func (r *RequiredFormFile) Validate(req *http.Request, field string) (Validation
 	case nil:
 		// do nothing
 	case http.ErrMissingFile:
-		validationErrors = append(validationErrors, NewValidationError(field, "", r.Message))
+		validationErrors.Append(NewValidationError(
+			SetParam(field),
+			SetValue(""),
+			SetMessage(r.Message),
+		))
 	default:
 		return nil, err
 	}
-	if len(validationErrors) == 0 {
+	if validationErrors.GetLength() == 0 {
 		return nil, nil
 	}
 	return validationErrors, nil

@@ -20,18 +20,25 @@ func (r *RequiredQueryValue) Validate(req *http.Request, field string) (Validati
 	}
 
 	if len(fieldValues) == 0 {
-		validationErrors = append(validationErrors, NewValidationError(field, "", r.Message))
+		validationErrors.Append(NewValidationError(
+			SetParam(field),
+			SetValue(""),
+			SetMessage(r.Message),
+		))
 	}
 
 	for _, fieldValue := range fieldValues {
 		if len(fieldValue) > 0 {
 			continue
 		}
-		validationErrors = append(validationErrors, NewValidationError(field, fieldValue, r.Message))
-
+		validationErrors.Append(NewValidationError(
+			SetParam(field),
+			SetValue(fieldValue),
+			SetMessage(r.Message),
+		))
 	}
 
-	if len(validationErrors) == 0 {
+	if validationErrors.GetLength() == 0 {
 		return nil, nil
 
 	}

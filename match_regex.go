@@ -17,8 +17,6 @@ const matchRegexPatternMessage = "Must regex pattern"
 func (m *MatchRegexPattern) Validate(req *http.Request, field string) (ValidationErrors, error) {
 	fieldValues := req.URL.Query()[field]
 
-	validationErrors := make(ValidationErrors, 0)
-
 	if m.Message == "" {
 		m.Message = matchRegexPatternMessage
 	}
@@ -31,14 +29,19 @@ func (m *MatchRegexPattern) Validate(req *http.Request, field string) (Validatio
 		return nil, nil
 	}
 
+	validationErrors := NewValidationErrors()
 	for _, fieldValue := range fieldValues {
 		if m.RegexPattern.MatchString(fieldValue) {
 			continue
 		}
-		validationErrors = append(validationErrors, NewValidationError(field, fieldValue, m.Message))
+		validationErrors.Append(NewValidationError(
+			SetParam(field),
+			SetValue(fieldValue),
+			SetMessage(m.Message),
+		))
 	}
 
-	if len(validationErrors) == 0 {
+	if validationErrors.GetLength() == 0 {
 		return nil, nil
 
 	}
