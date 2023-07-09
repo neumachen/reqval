@@ -1,6 +1,6 @@
-module github.com/magicalbanana/reqval
+module github.com/neumachen/reqval
 
-go 1.17
+go 1.20
 
 require github.com/stretchr/testify v1.2.2
 
