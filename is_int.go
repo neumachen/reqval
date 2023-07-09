@@ -12,7 +12,8 @@ type IsInt struct {
 
 const isIntMessage = "Must be int matching regex: ^[0-9]+$"
 
-var isIntRegex = regexp.MustCompile("^[0-9]+$")
+// IsIntRegex ...
+var IsIntRegex = regexp.MustCompile(`^[0-9]+$`)
 
 // Validate checks whether a value is empty or not by determining it's length
 func (i *IsInt) Validate(req *http.Request, field string) (ValidationErrors, error) {
@@ -33,7 +34,7 @@ func (i *IsInt) Validate(req *http.Request, field string) (ValidationErrors, err
 	validationErrors := make(ValidationErrors, 0)
 
 	for _, fieldValue := range fieldValues {
-		if isIntRegex.MatchString(fieldValue) {
+		if IsIntRegex.MatchString(fieldValue) {
 			continue
 		}
 		validationErrors.Append(NewValidationError(
@@ -47,5 +48,6 @@ func (i *IsInt) Validate(req *http.Request, field string) (ValidationErrors, err
 		return nil, nil
 
 	}
+
 	return validationErrors, nil
 }

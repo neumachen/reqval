@@ -23,7 +23,8 @@ type IsFloat struct {
 
 const isFloatMessage = "failed to recognize value as float"
 
-var floatRegex = regexp.MustCompile(`^[+\-]?(?:(?:0|[1-9]\d*)(?:\.\d*)|\.\d+)(?:\d[eE][+\-]?\d+)?$`)
+// IsFloatRegex ...
+var IsFloatRegex = regexp.MustCompile(`^[+\-]?(?:(?:0|[1-9]\d*)(?:\.\d*)|\.\d+)(?:\d[eE][+\-]?\d+)?$`)
 
 // Validate checks whether a value is empty or not by determining it's length
 func (i *IsFloat) Validate(req *http.Request, field string) (ValidationErrors, error) {
@@ -43,7 +44,7 @@ func (i *IsFloat) Validate(req *http.Request, field string) (ValidationErrors, e
 
 	validationErrors := make(ValidationErrors, 0)
 	for _, fieldValue := range fieldValues {
-		if isFloat := floatRegex.MatchString(fieldValue); !isFloat {
+		if isFloat := IsFloatRegex.MatchString(fieldValue); !isFloat {
 			validationErrors.Append(NewValidationError(
 				SetField(field),
 				SetValue(fieldValue),

@@ -3,7 +3,6 @@ package reqval
 import (
 	"bytes"
 	"io"
-	"io/ioutil"
 	"mime/multipart"
 	"os"
 	"path/filepath"
@@ -42,11 +41,9 @@ func multiPartForm(t *testing.T, files map[string]string, params map[string]stri
 }
 
 func createTempFile(t *testing.T, fileContent []byte, directory, dirPrefix, fileName string) (string, string) {
-	dir, err := ioutil.TempDir(dirPrefix, directory)
-	assert.NoError(t, err)
-
-	tmpfn := filepath.Join(dir, fileName)
-	err = ioutil.WriteFile(tmpfn, fileContent, 0666)
+	dir := os.TempDir()
+	tmpfn := filepath.Join(dir, dirPrefix, directory, fileName)
+	err := os.WriteFile(tmpfn, fileContent, 0666)
 	assert.NoError(t, err)
 	return dir, tmpfn
 }

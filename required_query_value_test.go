@@ -66,6 +66,6 @@ func TestRequiredQueryValue_Validate(t *testing.T) {
 		validationErrors, err := r.Validate(req, "foo")
 		require.NoError(t, err)
 		require.NotEmpty(t, validationErrors)
-		require.Equal(t, validationErrors[0].Message(), "boo")
+		require.Equal(t, validationErrors[0].GetMessage(), "boo")
 	})
 }
