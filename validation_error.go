@@ -26,17 +26,17 @@ func (v *validationError) SetMessage(message string) {
 }
 
 // Field ...
-func (v *validationError) Field() string {
+func (v validationError) Field() string {
 	return v.errorType.Field
 }
 
 // Value ...
-func (v *validationError) Value() string {
+func (v validationError) Value() string {
 	return v.errorType.Value
 }
 
 // Message ...
-func (v *validationError) Message() string {
+func (v validationError) Message() string {
 	return v.errorType.Message
 }
 
